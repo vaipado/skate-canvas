@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 scaleX: 1.5,
                 scaleY: 1.5,
                 selectable: false,
-                evented: false,
                 absolutePositioned: true
             });
 
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 originY: 'center',
                 clipPath: skateDeck,
                 selectable: false,
-                evented: false,
                 width: skateDeck.getScaledWidth(),
                 height: skateDeck.getScaledHeight(),
             });
@@ -69,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             img.onload = () => {
 
                 const fabricImage = new fabric.Image(img, {
-                    left: canvas.width / 2,
-                    top: canvas.height / 2,
+                    left: 0,
+                    top: 0,
                     originX: 'center',
                     originY: 'center',
                     scaleX: 0.5,
@@ -80,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasBorders: true
                 });
 
-                stickerHolderGroup.addWithUpdate(fabricImage);
+                stickerHolderGroup.add(fabricImage);
                 canvas.bringToFront(stickerHolderGroup);
                 canvas.setActiveObject(fabricImage);
                 canvas.renderAll();
