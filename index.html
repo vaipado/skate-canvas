@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,24 +8,29 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 </head>
+
 <body>
     <main class="container">
         <aside class="sidebar">
-            <h2>Elementos</h2>
+            <h2>Adesivos</h2>
             <div class="draggable-item" draggable="true" data-image="assets/sticker1.png">
                 <img src="assets/sticker1.png" alt="Adesivo 1">
             </div>
             <div class="draggable-item" draggable="true" data-image="assets/sticker2.png">
                 <img src="assets/sticker2.png" alt="Adesivo 2">
             </div>
-            </aside>
+        </aside>
 
         <section class="canvas-area">
+            <div class="options-top-canvas">
+                <input type="color" id="backgroundColorPicker" value="#FFFFFF">
+                <button id="saveButton"><img src="assets/icon-dowload.png" alt=""></button>
+            </div>
             <canvas id="skateCanvas"></canvas>
-            <button id="saveButton">Salvar Arte</button>
         </section>
     </main>
 
     <script src="js/script.js"></script>
 </body>
+
 </html>
