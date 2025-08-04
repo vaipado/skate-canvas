@@ -1,18 +1,7 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #e6e6e6;
-    color: #333;
-}
-
-
-h1 {
-    margin: 0;
-    font-size: 2.2em;
+    box-sizing: border-box;
 }
 
 .container {
@@ -24,11 +13,11 @@ h1 {
 }
 
 .sidebar {
-    width: 220px;
+    width: 14vw;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     max-height: calc(100vh - 120px);
     overflow-y: auto;
 }
@@ -55,7 +44,7 @@ h1 {
 
 .draggable-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .draggable-item img {
@@ -67,16 +56,15 @@ h1 {
 }
 
 .canvas-area {
-    flex: 1;
-    background-color: #6a6a6a;
+    width: 85vw;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     padding: 20px;
     gap: 20px;
+    background-color: #e3e3e3;
 }
 
 #skateCanvas {
@@ -86,15 +74,39 @@ h1 {
     height: auto;
 }
 
+.options-top-canvas {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+#backgroundColorPicker {
+    border-radius: 5px;
+    height: 50px;
+    width: 50px;
+    border: none;
+    padding: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+#backgroundColorPicker:hover{
+    transform: translateY(-2px);
+}
+
 #saveButton {
-    background-color: #2d1414;
+    background-color: #290b0b;
     color: white;
     border: none;
     padding: 12px 25px;
     font-size: 1.1em;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 #saveButton:hover {

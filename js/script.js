@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     const canvas = new fabric.Canvas('skateCanvas', {
         width: 800,
         height: 600
@@ -6,7 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const draggableItems = document.querySelectorAll('.draggable-item');
     const saveButton = document.getElementById('saveButton');
+    const colorPicker = document.getElementById('backgroundColorPicker');
+    
     let stickerHolderGroup;
+    let backgroundRect;
 
     function setupSkateAndClipping() {
         fabric.loadSVGFromURL('assets/skate-shape.svg', (objects, options) => {
@@ -20,21 +24,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 scaleX: 1.5,
                 scaleY: 1.5,
                 selectable: false,
+                evented: false,
                 absolutePositioned: true
             });
 
             canvas.add(skateDeck);
             canvas.sendToBack(skateDeck);
 
-            stickerHolderGroup = new fabric.Group([], {
+            backgroundRect = new fabric.Rect({
+                width: skateDeck.getScaledWidth(),
+                height: skateDeck.getScaledHeight(),
+                fill: colorPicker.value,
+                originX: 'center',
+                originY: 'center',
+                selectable: false,
+                evented: false
+            });
+
+            stickerHolderGroup = new fabric.Group([backgroundRect], {
                 left: skateDeck.left,
                 top: skateDeck.top,
                 originX: 'center',
                 originY: 'center',
                 clipPath: skateDeck,
                 selectable: false,
+                evented: false,
                 width: skateDeck.getScaledWidth(),
-                height: skateDeck.getScaledHeight(),
+                height: skateDeck.getScaledHeight()
             });
 
             canvas.add(stickerHolderGroup);
@@ -50,22 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        canvas.upperCanvasEl.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
+        canvas.upperCanvasEl.addEventListener('dragover', (e) => { e.preventDefault(); });
 
         canvas.upperCanvasEl.addEventListener('drop', (e) => {
             e.preventDefault();
             const imageUrl = e.dataTransfer.getData('text/plain');
 
-            if (!imageUrl || !stickerHolderGroup) {
-                return;
-            }
+            if (!imageUrl || !stickerHolderGroup) return;
 
             const img = new Image();
             img.src = imageUrl;
             img.onload = () => {
-
                 const fabricImage = new fabric.Image(img, {
                     left: 0,
                     top: 0,
@@ -86,19 +97,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function setupColorPicker() {
+        colorPicker.addEventListener('input', (e) => {
+            const newColor = e.target.value;
+            if (backgroundRect) {
+                backgroundRect.set('fill', newColor);
+                canvas.renderAll();
+            }
+        });
+    }
+
     function setupSaveButton() {
         saveButton.addEventListener('click', () => {
             canvas.discardActiveObject();
             canvas.renderAll();
 
-            const dataURL = canvas.toDataURL({
-                format: 'png',
-                quality: 1
-            });
+            const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
 
             const link = document.createElement('a');
             link.href = dataURL;
-            link.download = 'minha-arte-skate.png';
+            link.download = 'arte-skate.png';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -107,5 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupSkateAndClipping();
     setupDragAndDrop();
+    setupColorPicker();
     setupSaveButton();
 });
