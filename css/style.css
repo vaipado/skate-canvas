@@ -5,6 +5,7 @@
 }
 
 .container {
+    height: 100vh;
     display: flex;
     flex: 1;
     padding: 25px;
@@ -57,21 +58,19 @@
 
 .canvas-area {
     width: 85vw;
+    height: 90vh;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    gap: 60px;
     align-items: center;
     padding: 20px;
-    gap: 20px;
     background-color: #e3e3e3;
 }
 
-#skateCanvas {
-    display: block;
-    cursor: grab;
-    max-width: 100%;
-    height: auto;
+#skateCanvasContainer {
+    border-radius: 200px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.726);
 }
 
 .options-top-canvas {

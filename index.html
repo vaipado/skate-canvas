@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criador de Arte de Skate</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <style>
+        /* Estilo para o nosso monitor de debug */
+        #debugCanvas {
+            border: 3px solid red;
+            margin-top: 20px;
+        }
+    </style>
 </head>
-
 <body>
     <main class="container">
         <aside class="sidebar">
@@ -23,14 +28,14 @@
 
         <section class="canvas-area">
             <div class="options-top-canvas">
-                <input type="color" id="backgroundColorPicker" value="#FFFFFF">
+                <input type="color" id="backgroundColorPicker" value="#ffffff">
                 <button id="saveButton"><img src="assets/icon-dowload.png" alt=""></button>
             </div>
-            <canvas id="skateCanvas"></canvas>
+
+            <div id="skateCanvasContainer"></div>
         </section>
     </main>
 
     <script src="js/script.js"></script>
 </body>
-
 </html>

@@ -1,62 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const canvas = new fabric.Canvas('skateCanvas', {
-        width: 800,
-        height: 600
+    const stage = new Konva.Stage({
+        container: 'skateCanvasContainer',
+        width: 120,
+        height: 450,
     });
+
+    const mainLayer = new Konva.Layer();
+    stage.add(mainLayer);
 
     const draggableItems = document.querySelectorAll('.draggable-item');
     const saveButton = document.getElementById('saveButton');
     const colorPicker = document.getElementById('backgroundColorPicker');
-    
-    let stickerHolderGroup;
+
+    const clippableGroup = new Konva.Group();
+    mainLayer.add(clippableGroup);
+
     let backgroundRect;
 
-    function setupSkateAndClipping() {
-        fabric.loadSVGFromURL('assets/skate-shape.svg', (objects, options) => {
-            const skateDeck = fabric.util.groupSVGElements(objects, options);
+    const clipShape = new Konva.Rect({
+        x: (stage.width()) / 2,
+        y: (stage.height()) / 2,
+        width: 120,
+        height: 450,
+        cornerRadius: 200,
+    });
 
-            skateDeck.set({
-                left: canvas.width / 2,
-                top: canvas.height / 2,
-                originX: 'center',
-                originY: 'center',
-                scaleX: 1.5,
-                scaleY: 1.5,
-                selectable: false,
-                evented: false,
-                absolutePositioned: true
-            });
+    clippableGroup.clipFunc((ctx) => {
+        clipShape._sceneFunc(ctx);
+    });
 
-            canvas.add(skateDeck);
-            canvas.sendToBack(skateDeck);
-
-            backgroundRect = new fabric.Rect({
-                width: skateDeck.getScaledWidth(),
-                height: skateDeck.getScaledHeight(),
-                fill: colorPicker.value,
-                originX: 'center',
-                originY: 'center',
-                selectable: false,
-                evented: false
-            });
-
-            stickerHolderGroup = new fabric.Group([backgroundRect], {
-                left: skateDeck.left,
-                top: skateDeck.top,
-                originX: 'center',
-                originY: 'center',
-                clipPath: skateDeck,
-                selectable: false,
-                evented: false,
-                width: skateDeck.getScaledWidth(),
-                height: skateDeck.getScaledHeight()
-            });
-
-            canvas.add(stickerHolderGroup);
-            canvas.renderAll();
-        });
-    }
+    backgroundRect = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: stage.width(),
+        height: stage.height(),
+        fill: colorPicker.value,
+        listening: false,
+    });
+    clippableGroup.add(backgroundRect);
 
     function setupDragAndDrop() {
         draggableItems.forEach(item => {
@@ -66,34 +48,53 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        canvas.upperCanvasEl.addEventListener('dragover', (e) => { e.preventDefault(); });
-
-        canvas.upperCanvasEl.addEventListener('drop', (e) => {
+        stage.container().addEventListener('dragover', (e) => {
             e.preventDefault();
+        });
+
+        stage.container().addEventListener('drop', (e) => {
+            e.preventDefault();
+            stage.setPointersPositions(e);
+
             const imageUrl = e.dataTransfer.getData('text/plain');
+            if (!imageUrl) return;
 
-            if (!imageUrl || !stickerHolderGroup) return;
+            const dropPosition = stage.getPointerPosition();
 
-            const img = new Image();
-            img.src = imageUrl;
-            img.onload = () => {
-                const fabricImage = new fabric.Image(img, {
-                    left: 0,
-                    top: 0,
-                    originX: 'center',
-                    originY: 'center',
+            Konva.Image.fromURL(imageUrl, (stickerImage) => {
+                stickerImage.setAttrs({
+                    x: dropPosition.x,
+                    y: dropPosition.y,
                     scaleX: 0.5,
                     scaleY: 0.5,
-                    selectable: true,
-                    hasControls: true,
-                    hasBorders: true
+                    draggable: true,
+                    name: 'sticker',
                 });
+                stickerImage.offsetX(stickerImage.width() / 2);
+                stickerImage.offsetY(stickerImage.height() / 2);
 
-                stickerHolderGroup.add(fabricImage);
-                canvas.bringToFront(stickerHolderGroup);
-                canvas.setActiveObject(fabricImage);
-                canvas.renderAll();
-            };
+                clippableGroup.add(stickerImage);
+                stickerImage.moveToTop();
+            });
+        });
+    }
+
+    function setupSelection() {
+        const transformer = new Konva.Transformer({ nodes: [] });
+        mainLayer.add(transformer);
+
+        clippableGroup.on('click tap', function (e) {
+            if (e.target.hasName('sticker')) {
+                transformer.nodes([e.target]);
+            } else {
+                transformer.nodes([]);
+            }
+        });
+
+        stage.on('click tap', function (e) {
+            if (e.target === stage) {
+                transformer.nodes([]);
+            }
         });
     }
 
@@ -101,30 +102,29 @@ document.addEventListener('DOMContentLoaded', () => {
         colorPicker.addEventListener('input', (e) => {
             const newColor = e.target.value;
             if (backgroundRect) {
-                backgroundRect.set('fill', newColor);
-                canvas.renderAll();
+                backgroundRect.fill(newColor);
             }
         });
     }
 
     function setupSaveButton() {
         saveButton.addEventListener('click', () => {
-            canvas.discardActiveObject();
-            canvas.renderAll();
-
-            const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
-
+            const transformer = stage.findOne('Transformer');
+            if (transformer) {
+                transformer.nodes([]);
+            }
+            const dataURL = stage.toDataURL({ pixelRatio: 2 });
             const link = document.createElement('a');
             link.href = dataURL;
-            link.download = 'arte-skate.png';
+            link.download = 'arte-skate-konva.png';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         });
     }
 
-    setupSkateAndClipping();
-    setupDragAndDrop();
     setupColorPicker();
+    setupDragAndDrop();
+    setupSelection();
     setupSaveButton();
 });
