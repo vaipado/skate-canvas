@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Stremzy';
+    src: url('/fonts/Streamzy.ttf') format('truetype');
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -24,12 +29,13 @@
 }
 
 .sidebar h2 {
-    margin-top: 0;
-    color: #34495e;
-    border-bottom: 1px solid #ecf0f1;
+    color: #4c0a00;
+    border-bottom: 1px solid #751102;
     padding-bottom: 12px;
     margin-bottom: 20px;
-    font-size: 1.5em;
+    font-size: 4.5em;
+    font-family: "Stremzy";
+    font-weight: 400;
 }
 
 .draggable-item {
@@ -93,7 +99,7 @@
     transition: transform 0.2s ease;
 }
 
-#backgroundColorPicker:hover{
+#backgroundColorPicker:hover {
     transform: translateY(-2px);
 }
 
