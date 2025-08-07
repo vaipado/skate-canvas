@@ -6,24 +6,13 @@
     <title>Criador de Arte de Skate</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/konva@9/konva.min.js"></script>
-    <style>
-        /* Estilo para o nosso monitor de debug */
-        #debugCanvas {
-            border: 3px solid red;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <main class="container">
         <aside class="sidebar">
             <h2>Adesivos</h2>
-            <div class="draggable-item" draggable="true" data-image="assets/sticker1.png">
-                <img src="assets/sticker1.png" alt="Adesivo 1">
-            </div>
-            <div class="draggable-item" draggable="true" data-image="assets/sticker2.png">
-                <img src="assets/sticker2.png" alt="Adesivo 2">
-            </div>
+            <div id="imageBankContainer" class="sticker-palette">
+                </div>
         </aside>
 
         <section class="canvas-area">
