@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mainLayer.add(clippableGroup);
 
     let backgroundRect;
+    let transformer;
 
     const clipShape = new Konva.Rect({
         x: (stage.width()) / 2,
@@ -75,15 +76,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 clippableGroup.add(stickerImage);
                 stickerImage.moveToTop();
+
+                transformer.nodes([stickerImage]);
             });
         });
     }
 
     function setupSelection() {
-        const transformer = new Konva.Transformer({ nodes: [] });
+        transformer = new Konva.Transformer({
+            nodes: [],
+            keepRatio: true, // Mantém a proporção ao redimensionar pelos cantos
+            anchorStroke: '#0094ff',
+            anchorFill: '#ffffff',
+            anchorSize: 8,
+            borderStroke: '#0094ff',
+            borderDash: [3, 3]
+        });
+
         mainLayer.add(transformer);
 
+        // Garante que o transformer sempre apareça na frente dos outros elementos
+        transformer.moveToTop();
+
         clippableGroup.on('click tap', function (e) {
+            // Ignora cliques no próprio grupo, focando apenas nos shapes filhos
+            if (e.target === clippableGroup) {
+                transformer.nodes([]);
+                return;
+            }
+
             if (e.target.hasName('sticker')) {
                 transformer.nodes([e.target]);
             } else {
@@ -91,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Esta parte do seu código já está ótima para desmarcar ao clicar no fundo
         stage.on('click tap', function (e) {
             if (e.target === stage) {
                 transformer.nodes([]);
