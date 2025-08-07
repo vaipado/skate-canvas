@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainLayer = new Konva.Layer();
     stage.add(mainLayer);
 
-    const draggableItems = document.querySelectorAll('.draggable-item');
     const saveButton = document.getElementById('saveButton');
     const colorPicker = document.getElementById('backgroundColorPicker');
 
@@ -18,6 +17,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let backgroundRect;
     let transformer;
+
+    const imageBank = [{
+        name: 'Adesivo 1',
+        url: 'assets/sticker1.png'
+    }, {
+        name: 'Adesivo 2',
+        url: 'assets/sticker2.png'
+    }, {
+        name: 'Adesivo 3',
+        url: 'assets/sticker3.png'
+    }, {
+        name: 'Adesivo 4',
+        url: 'assets/sticker4.png'
+    }, {
+        name: 'Adesivo 5',
+        url: 'assets/sticker5.png'
+    }
+    ];
 
     const clipShape = new Konva.Rect({
         x: (stage.width()) / 2,
@@ -41,19 +58,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     clippableGroup.add(backgroundRect);
 
+    function populateImageBank() {
+        const container = document.getElementById('imageBankContainer');
+        if (!container) return;
+
+        imageBank.forEach(sticker => {
+            const divItem = document.createElement('div');
+            divItem.className = 'draggable-item';
+            divItem.setAttribute('draggable', 'true');
+            divItem.setAttribute('data-image', sticker.url);
+
+            const imgItem = document.createElement('img');
+            imgItem.src = sticker.url;
+            imgItem.alt = sticker.name;
+
+            divItem.appendChild(imgItem);
+            container.appendChild(divItem);
+        });
+    }
+
     function setupDragAndDrop() {
+        const draggableItems = document.querySelectorAll('.draggable-item');
+
         draggableItems.forEach(item => {
             item.addEventListener('dragstart', (e) => {
-                const imageUrl = e.target.closest('.draggable-item').dataset.image;
+                const imageUrl = e.currentTarget.dataset.image;
                 e.dataTransfer.setData('text/plain', imageUrl);
             });
         });
 
-        stage.container().addEventListener('dragover', (e) => {
+        const canvasContainer = stage.container();
+
+        canvasContainer.addEventListener('dragover', (e) => {
             e.preventDefault();
         });
 
-        stage.container().addEventListener('drop', (e) => {
+        canvasContainer.addEventListener('drop', (e) => {
             e.preventDefault();
             stage.setPointersPositions(e);
 
@@ -85,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupSelection() {
         transformer = new Konva.Transformer({
             nodes: [],
-            keepRatio: true, // Mantém a proporção ao redimensionar pelos cantos
+            keepRatio: true,
             anchorStroke: '#0094ff',
             anchorFill: '#ffffff',
             anchorSize: 8,
@@ -94,17 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         mainLayer.add(transformer);
-
-        // Garante que o transformer sempre apareça na frente dos outros elementos
         transformer.moveToTop();
 
         clippableGroup.on('click tap', function (e) {
-            // Ignora cliques no próprio grupo, focando apenas nos shapes filhos
             if (e.target === clippableGroup) {
                 transformer.nodes([]);
                 return;
             }
-
             if (e.target.hasName('sticker')) {
                 transformer.nodes([e.target]);
             } else {
@@ -112,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Esta parte do seu código já está ótima para desmarcar ao clicar no fundo
         stage.on('click tap', function (e) {
             if (e.target === stage) {
                 transformer.nodes([]);
@@ -131,11 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupSaveButton() {
         saveButton.addEventListener('click', () => {
-            const transformer = stage.findOne('Transformer');
             if (transformer) {
                 transformer.nodes([]);
             }
-            const dataURL = stage.toDataURL({ pixelRatio: 2 });
+            const dataURL = stage.toDataURL({
+                pixelRatio: 2
+            });
             const link = document.createElement('a');
             link.href = dataURL;
             link.download = 'arte-skate-konva.png';
@@ -145,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    populateImageBank();
     setupColorPicker();
     setupDragAndDrop();
     setupSelection();

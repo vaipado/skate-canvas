@@ -60,6 +60,7 @@
     display: block;
     margin: 0 auto;
     border-radius: 5px;
+    pointer-events: none; /* Importante para o drag funcionar corretamente */
 }
 
 .canvas-area {
@@ -117,4 +118,14 @@
 #saveButton:hover {
     background-color: #9d1a1a;
     transform: translateY(-2px);
+}
+
+.sticker-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+}
+
+.sticker-palette .draggable-item {
+    margin-bottom: 0;
 }
