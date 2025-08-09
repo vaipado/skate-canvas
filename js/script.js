@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainLayer = new Konva.Layer();
     stage.add(mainLayer);
 
+    // --- CAMADA ADICIONAL, APENAS PARA OS FUROS ---
+    // Esta camada ficará por cima da principal, garantindo que os furos fiquem sempre visíveis.
+    const holesLayer = new Konva.Layer();
+    stage.add(holesLayer);
+    // ---------------------------------------------
+
     const saveButton = document.getElementById('saveButton');
     const colorPicker = document.getElementById('backgroundColorPicker');
 
@@ -33,20 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {
         name: 'Adesivo 5',
         url: 'assets/sticker5.png'
-    }
-    ];
+    }];
 
     const clipShape = new Konva.Rect({
-        x: (stage.width()) / 2,
-        y: (stage.height()) / 2,
+        x: 0,
+        y: 0,
         width: 120,
         height: 450,
         cornerRadius: 200,
     });
 
+    // --- LÓGICA DE RECORTE VOLTOU A SER SIMPLES ---
+    // Apenas o formato do shape, sem os furos.
     clippableGroup.clipFunc((ctx) => {
         clipShape._sceneFunc(ctx);
     });
+    // ---------------------------------------------
 
     backgroundRect = new Konva.Rect({
         x: 0,
@@ -57,6 +65,46 @@ document.addEventListener('DOMContentLoaded', () => {
         listening: false,
     });
     clippableGroup.add(backgroundRect);
+
+    // --- NOVA FUNÇÃO PARA DESENHAR OS FUROS COMO CÍRCULOS ---
+    function createTruckHoles() {
+        const holeRadius = 3;
+        const truckOffsetFromCenter = 110;
+        const holeSpacingX = 20;
+        const holeSpacingY = 35;
+
+        const centerX = stage.width() / 2;
+        const centerY = stage.height() / 2;
+
+        const truckPositions = [
+            { x: centerX, y: centerY - truckOffsetFromCenter },
+            { x: centerX, y: centerY + truckOffsetFromCenter }
+        ];
+
+        const holeProps = {
+            radius: holeRadius,
+            fill: 'black',
+            listening: false,
+            stroke: '#cccccc',
+            strokeWidth: 2 
+        };
+
+        truckPositions.forEach(pos => {
+            const holesData = [
+                { x: pos.x - holeSpacingX / 2, y: pos.y - holeSpacingY / 2 },
+                { x: pos.x + holeSpacingX / 2, y: pos.y - holeSpacingY / 2 },
+                { x: pos.x - holeSpacingX / 2, y: pos.y + holeSpacingY / 2 },
+                { x: pos.x + holeSpacingX / 2, y: pos.y + holeSpacingY / 2 }
+            ];
+
+            holesData.forEach(data => {
+                const hole = new Konva.Circle({ ...holeProps, ...data });
+                holesLayer.add(hole);
+            });
+        });
+    }
+    // ---------------------------------------------------------
+
 
     function populateImageBank() {
         const container = document.getElementById('imageBankContainer');
@@ -106,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 stickerImage.setAttrs({
                     x: dropPosition.x,
                     y: dropPosition.y,
-                    scaleX: 0.5,
-                    scaleY: 0.5,
+                    scaleX: 0.3,
+                    scaleY: 0.3,
                     draggable: true,
                     name: 'sticker',
                 });
@@ -186,4 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDragAndDrop();
     setupSelection();
     setupSaveButton();
+
+    // --- CHAMADA DA NOVA FUNÇÃO ---
+    createTruckHoles();
+    // ----------------------------
 });
