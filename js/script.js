@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    let selectedSticker = null;
+
     const stage = new Konva.Stage({
         container: 'skateCanvasContainer',
         width: 120,
@@ -8,13 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mainLayer = new Konva.Layer();
     stage.add(mainLayer);
-
-    // --- CAMADA ADICIONAL, APENAS PARA OS FUROS ---
-    // Esta camada ficará por cima da principal, garantindo que os furos fiquem sempre visíveis.
     const holesLayer = new Konva.Layer();
     stage.add(holesLayer);
-    // ---------------------------------------------
-
+    
     const saveButton = document.getElementById('saveButton');
     const colorPicker = document.getElementById('backgroundColorPicker');
 
@@ -49,12 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cornerRadius: 200,
     });
 
-    // --- LÓGICA DE RECORTE VOLTOU A SER SIMPLES ---
-    // Apenas o formato do shape, sem os furos.
     clippableGroup.clipFunc((ctx) => {
         clipShape._sceneFunc(ctx);
     });
-    // ---------------------------------------------
 
     backgroundRect = new Konva.Rect({
         x: 0,
@@ -66,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     clippableGroup.add(backgroundRect);
 
-    // --- NOVA FUNÇÃO PARA DESENHAR OS FUROS COMO CÍRCULOS ---
     function createTruckHoles() {
         const holeRadius = 3;
         const truckOffsetFromCenter = 110;
@@ -86,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fill: 'black',
             listening: false,
             stroke: '#cccccc',
-            strokeWidth: 2 
+            strokeWidth: 2
         };
 
         truckPositions.forEach(pos => {
@@ -103,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    // ---------------------------------------------------------
 
 
     function populateImageBank() {
@@ -136,10 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const canvasContainer = stage.container();
-
-        canvasContainer.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
+        canvasContainer.addEventListener('dragover', (e) => { e.preventDefault(); });
 
         canvasContainer.addEventListener('drop', (e) => {
             e.preventDefault();
@@ -152,32 +142,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             Konva.Image.fromURL(imageUrl, (stickerImage) => {
                 stickerImage.setAttrs({
-                    x: dropPosition.x,
-                    y: dropPosition.y,
-                    scaleX: 0.3,
-                    scaleY: 0.3,
-                    draggable: true,
-                    name: 'sticker',
+                    x: dropPosition.x, y: dropPosition.y,
+                    scaleX: 0.3, scaleY: 0.3,
+                    draggable: true, name: 'sticker',
                 });
                 stickerImage.offsetX(stickerImage.width() / 2);
                 stickerImage.offsetY(stickerImage.height() / 2);
 
                 clippableGroup.add(stickerImage);
-                stickerImage.moveToTop();
-
                 transformer.nodes([stickerImage]);
+
+                selectedSticker = stickerImage;
             });
         });
     }
 
+
     function setupSelection() {
         transformer = new Konva.Transformer({
-            nodes: [],
-            keepRatio: true,
-            anchorStroke: '#0094ff',
-            anchorFill: '#ffffff',
-            anchorSize: 8,
-            borderStroke: '#0094ff',
+            nodes: [], keepRatio: true,
+            anchorStroke: '#0094ff', anchorFill: '#ffffff',
+            anchorSize: 8, borderStroke: '#0094ff',
             borderDash: [3, 3]
         });
 
@@ -185,20 +170,29 @@ document.addEventListener('DOMContentLoaded', () => {
         transformer.moveToTop();
 
         clippableGroup.on('click tap', function (e) {
-            if (e.target === clippableGroup) {
-                transformer.nodes([]);
-                return;
-            }
             if (e.target.hasName('sticker')) {
                 transformer.nodes([e.target]);
+                selectedSticker = e.target;
             } else {
                 transformer.nodes([]);
+                selectedSticker = null;
             }
         });
 
         stage.on('click tap', function (e) {
             if (e.target === stage) {
                 transformer.nodes([]);
+                selectedSticker = null;
+            }
+        });
+    }
+
+    function setupDeleteListener() {
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selectedSticker) {
+                transformer.nodes([]);
+                selectedSticker.destroy();
+                selectedSticker = null;
             }
         });
     }
@@ -214,12 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupSaveButton() {
         saveButton.addEventListener('click', () => {
-            if (transformer) {
-                transformer.nodes([]);
-            }
-            const dataURL = stage.toDataURL({
-                pixelRatio: 2
-            });
+            transformer.nodes([]);
+            selectedSticker = null;
+
+            const dataURL = stage.toDataURL({ pixelRatio: 2 });
             const link = document.createElement('a');
             link.href = dataURL;
             link.download = 'arte-skate-konva.png';
@@ -234,8 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDragAndDrop();
     setupSelection();
     setupSaveButton();
-
-    // --- CHAMADA DA NOVA FUNÇÃO ---
     createTruckHoles();
-    // ----------------------------
+    setupDeleteListener();
 });

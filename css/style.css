@@ -3,6 +3,16 @@
     src: url('/fonts/Streamzy.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'Barcelona';
+    src: url('/fonts/Barcelona\ Graffiti\ Bombing.otf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Urban';
+    src: url('/fonts/URBAN\ VIBES.ttf') format('truetype');
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -60,7 +70,7 @@
     display: block;
     margin: 0 auto;
     border-radius: 5px;
-    pointer-events: none; /* Importante para o drag funcionar corretamente */
+    pointer-events: none;
 }
 
 .canvas-area {
@@ -69,10 +79,10 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap: 60px;
     align-items: center;
-    padding: 20px;
+    justify-content: space-between;
     background-color: rgb(227, 227, 227);
+    overflow: hidden;
 }
 
 #skateCanvasContainer {
@@ -84,6 +94,7 @@
     width: 100%;
     display: flex;
     align-items: center;
+    padding: 10px;
     justify-content: space-between;
 
 }
@@ -108,11 +119,13 @@
     background-color: #290b0b;
     color: white;
     border: none;
-    padding: 12px 25px;
-    font-size: 1.1em;
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
 #saveButton:hover {
@@ -128,4 +141,18 @@
 
 .sticker-palette .draggable-item {
     margin-bottom: 0;
+}
+
+.text-delete{
+    font-family: 'Urban';
+    font-size: 20px;
+    color: white;
+    width: 100%;
+    background-color: black;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 6%;
+    padding-right: 20px;
 }
