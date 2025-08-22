@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         width: stage.width(),
         height: stage.height(),
         fill: colorPicker.value,
-        listening: false,
+        listening: true,
     });
     clippableGroup.add(backgroundRect);
 
