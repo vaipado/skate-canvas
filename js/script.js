@@ -12,9 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     stage.add(mainLayer);
     const holesLayer = new Konva.Layer();
     stage.add(holesLayer);
-    
+
     const saveButton = document.getElementById('saveButton');
     const colorPicker = document.getElementById('backgroundColorPicker');
+    const stickerOptionsBar = document.getElementById('sticker-options');
+    const buttonsLayers = stickerOptionsBar.querySelectorAll('button');
+    const textDelete = stickerOptionsBar.querySelectorAll('div');
 
     const clippableGroup = new Konva.Group();
     mainLayer.add(clippableGroup);
@@ -37,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {
         name: 'Adesivo 5',
         url: 'assets/sticker5.png'
+    }, {
+        name: 'Adesivo 6',
+        url: 'assets/sticker6.png'
     }];
 
     const clipShape = new Konva.Rect({
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         width: stage.width(),
         height: stage.height(),
         fill: colorPicker.value,
-        listening: false,
+        listening: true,
     });
     clippableGroup.add(backgroundRect);
 
@@ -151,8 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 clippableGroup.add(stickerImage);
                 transformer.nodes([stickerImage]);
-
                 selectedSticker = stickerImage;
+
+                buttonsLayers.forEach(button => {
+                    button.style.display = 'flex'
+                });
+
+                textDelete.forEach(text => {
+                    text.style.display = 'none'
+                })
             });
         });
     }
@@ -173,9 +186,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.hasName('sticker')) {
                 transformer.nodes([e.target]);
                 selectedSticker = e.target;
+                buttonsLayers.forEach(button => {
+                    button.style.display = 'flex'
+                });
+                textDelete.forEach(text => {
+                    text.style.display = 'none'
+                });
             } else {
                 transformer.nodes([]);
                 selectedSticker = null;
+                buttonsLayers.forEach(button => {
+                    button.style.display = 'none'
+                });
+                textDelete.forEach(text => {
+                    text.style.display = 'flex'
+                })
             }
         });
 
@@ -183,6 +208,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === stage) {
                 transformer.nodes([]);
                 selectedSticker = null;
+                buttonsLayers.forEach(button => {
+                    button.style.display = 'none'
+                });
+                textDelete.forEach(text => {
+                    text.style.display = 'flex'
+                })
+            }
+        });
+    }
+
+    function setupLayeringControls() {
+        document.getElementById('moveUpBtn').addEventListener('click', () => {
+            if (selectedSticker) {
+                selectedSticker.moveUp();
+            }
+        });
+        document.getElementById('moveDownBtn').addEventListener('click', () => {
+            if (selectedSticker) {
+                if (selectedSticker.getZIndex() > 1) {
+                    selectedSticker.moveDown();
+                }
+            }
+        });
+        document.getElementById('moveToTopBtn').addEventListener('click', () => {
+            if (selectedSticker) {
+                selectedSticker.moveToTop();
+            }
+        });
+        document.getElementById('moveToBottomBtn').addEventListener('click', () => {
+            if (selectedSticker) {
+                selectedSticker.setZIndex(1);
             }
         });
     }
@@ -193,6 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 transformer.nodes([]);
                 selectedSticker.destroy();
                 selectedSticker = null;
+                buttonsLayers.forEach(button => {
+                    button.style.display = 'none'
+                });
+                textDelete.forEach(text => {
+                    text.style.display = 'flex'
+                });
             }
         });
     }
@@ -210,6 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
         saveButton.addEventListener('click', () => {
             transformer.nodes([]);
             selectedSticker = null;
+            buttonsLayers.forEach(button => {
+                button.style.display = 'none'
+            });
+            textDelete.forEach(text => {
+                text.style.display = 'flex'
+            });
 
             const dataURL = stage.toDataURL({ pixelRatio: 2 });
             const link = document.createElement('a');
@@ -228,4 +296,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSaveButton();
     createTruckHoles();
     setupDeleteListener();
+    setupLayeringControls();
 });

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criador de Arte de Skate</title>
+    <title>Criador de Arte de Shape</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
+
 <body>
     <main class="container">
         <aside class="sidebar">
             <h2>Adesivos</h2>
             <div id="imageBankContainer" class="sticker-palette">
-                </div>
+            </div>
         </aside>
 
         <section class="canvas-area">
@@ -21,10 +24,17 @@
                 <button id="saveButton"><img src="assets/icon-dowload.png" alt=""></button>
             </div>
             <div id="skateCanvasContainer"></div>
-            <div class="text-delete">Pressione a tecla "Backspace" ou "Delete" ao selecionar um adesivo para removê-lo do shape skate</div>
+            <div id="sticker-options" class="sticker-options-bar">
+                <button id="moveUpBtn" style="display: none;"><img src="assets/angulo-pequeno.png" alt=""> Frente</button>
+                <button id="moveDownBtn" style="display: none;"><img src="assets/angulo-pequeno-para-baixo.png" alt=""> Trás</button>
+                <button id="moveToTopBtn" style="display: none;"><img src="assets/angulo-duplo-pequeno.png" alt=""> Topo</button>
+                <button id="moveToBottomBtn" style="display: none;"><img src="assets/angulo-duplo-pequeno-baixo.png" alt=""> Fundo</button>
+                <div class="text-delete">Pressione a tecla "Backspace" ou "Delete" ao selecionar um adesivo para removê-lo do shape skate</div>
+            </div>
         </section>
     </main>
 
     <script src="js/script.js"></script>
 </body>
+
 </html>
