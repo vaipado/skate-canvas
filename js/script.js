@@ -272,7 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
         saveButton.addEventListener('click', () => {
             transformer.nodes([]);
             selectedSticker = null;
-            stickerOptionsBar.style.display = 'none';
+            buttonsLayers.forEach(button => {
+                button.style.display = 'none'
+            });
+            textDelete.forEach(text => {
+                text.style.display = 'flex'
+            });
 
             const dataURL = stage.toDataURL({ pixelRatio: 2 });
             const link = document.createElement('a');
