@@ -11,9 +11,9 @@ Exportação da arte final como um arquivo PNG.
 
 # Tecnologias:
 
-HTML5
-CSS3
-JavaScript
+HTML5, 
+CSS3, 
+JavaScript, 
 Konva.js
 
 # Como Rodar:
