@@ -257,6 +257,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
+
+        document.getElementById('deleteBtn').addEventListener('click', () => {
+            transformer.nodes([]);
+            selectedSticker.destroy();
+            selectedSticker = null;
+            buttonsLayers.forEach(button => {
+                button.style.display = 'none'
+            });
+            textDelete.forEach(text => {
+                text.style.display = 'flex'
+            });
+        });
     }
 
     function setupColorPicker() {
