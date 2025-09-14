@@ -165,7 +165,10 @@
     font-size: 20px;
     justify-content: center;
     align-items: center;
-    padding-right: 10px;
+}
+
+.sticker-options-bar button p{
+    margin-right: 5px;
 }
 
 .text-delete{
