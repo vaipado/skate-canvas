@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const stage = new Konva.Stage({
         container: 'skateCanvasContainer',
-        width: 120,
-        height: 450,
+        width: 110,
+        height: 400,
     });
 
     const mainLayer = new Konva.Layer();
@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const clipShape = new Konva.Rect({
         x: 0,
         y: 0,
-        width: 120,
-        height: 450,
+        width: 110,
+        height: 400,
         cornerRadius: 200,
     });
 
@@ -198,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 buttonsLayers.forEach(button => {
                     button.style.display = 'none'
                 });
+            if (window.innerWidth > 768)
                 textDelete.forEach(text => {
                     text.style.display = 'flex'
                 })
@@ -211,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 buttonsLayers.forEach(button => {
                     button.style.display = 'none'
                 });
+            if (window.innerWidth > 768)
                 textDelete.forEach(text => {
                     text.style.display = 'flex'
                 })
@@ -252,9 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 buttonsLayers.forEach(button => {
                     button.style.display = 'none'
                 });
-                textDelete.forEach(text => {
-                    text.style.display = 'flex'
-                });
+                if (window.innerWidth > 768)
+                    textDelete.forEach(text => {
+                        text.style.display = 'flex'
+                    });
             }
         });
 
@@ -265,9 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
             buttonsLayers.forEach(button => {
                 button.style.display = 'none'
             });
-            textDelete.forEach(text => {
-                text.style.display = 'flex'
-            });
+            if (window.innerWidth > 768)
+                textDelete.forEach(text => {
+                    text.style.display = 'flex'
+                });
         });
     }
 
@@ -287,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
             buttonsLayers.forEach(button => {
                 button.style.display = 'none'
             });
+            if (window.innerWidth > 768)
             textDelete.forEach(text => {
                 text.style.display = 'flex'
             });
