@@ -24,7 +24,7 @@ html {
 }
 
 .container {
-    height: 100vh;
+    height: 100dvh;
     display: flex;
     flex: 1;
     padding: 2%;
@@ -38,7 +38,7 @@ html {
     padding: 1%;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-height: 95vh;
+    max-height: 95dvh;
     overflow-y: auto;
 }
 
@@ -81,7 +81,7 @@ html {
 
 .canvas-area {
     width: 85vw;
-    height: 95vh;
+    height: 95dvh;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
